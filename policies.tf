@@ -15,7 +15,7 @@ module "read_write_elasticsearch_policy" {
 # Purpose: Allow read access to EC2 metadata
 
 module "policy_read_instance_metadata" {
-  source = "git::https://bitbucket.org/corvestadevops/devops.infra.modules.git///policies/read_instance_metadata"
+  source = "git::https://bitbucket.org/corvestadevops/devops.infra.modules.git///policies/read_instance_metadata?ref=0.0.2"
   name   = "read-instance-metadata"
 }
 
