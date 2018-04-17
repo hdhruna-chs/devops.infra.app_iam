@@ -1,5 +1,5 @@
 module "ec2_logstash_role" {
-  source  = "git::https://bitbucket.org/corvestadevops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
   name    = "ec2-logstash"
   service = "ec2"
 }
@@ -24,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "ec2_logstash_metadata" {
 # Purpose: rabbitmq role for EC2 instances
 
 module "rabbitmq_role" {
-  source  = "git::https://bitbucket.org/corvestadevops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
   name    = "rabbitmq"
   service = "ec2"
 }
@@ -40,7 +40,7 @@ resource "aws_iam_role_policy_attachment" "rabbitmq_auto_clustering" {
 # Purpose: nexpose scanner role for EC2 instances
 
 module "nexpose_role" {
-  source  = "git::https://bitbucket.org/corvestadevops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
   name    = "nexpose"
   service = "ec2"
 }
