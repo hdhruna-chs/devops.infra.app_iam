@@ -1,12 +1,12 @@
 #Elastic search permissions
 
 module "read_elasticsearch_policy" {
-  source  = "git::https://bitbucket.org/corvestadevops/devops.infra.modules.git//policies/read_elasticsearch?ref=0.0.2"
+  source  = "git::https://bitbucket.org/corvestadevops.infra.modules.git//policies/read_elasticsearch?ref=0.0.2"
   name    = "read-elasticsesarch"
 }
 
 module "read_write_elasticsearch_policy" {
-  source  = "git::https://bitbucket.org/corvestadevops/devops.infra.modules.git//policies/read_write_elasticsearch?ref=0.0.2"
+  source  = "git::https://bitbucket.org/corvestadevops.infra.modules.git//policies/read_write_elasticsearch?ref=0.0.2"
   name    = "read-write-elasticsesarch"
 }
 
