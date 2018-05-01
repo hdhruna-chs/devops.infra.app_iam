@@ -2,12 +2,12 @@
 
 module "read_elasticsearch_policy" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//policies/read_elasticsearch?ref=0.0.2"
-  name    = "read-elasticsesarch"
+  name    = "${data.terraform_remote_state.config.run_env}.read-elasticsesarch"
 }
 
 module "read_write_elasticsearch_policy" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//policies/read_write_elasticsearch?ref=0.0.2"
-  name    = "read-write-elasticsesarch"
+  name    = "${data.terraform_remote_state.config.run_env}.read-write-elasticsesarch"
 }
 
 
@@ -16,7 +16,7 @@ module "read_write_elasticsearch_policy" {
 
 module "policy_read_instance_metadata" {
   source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/read_instance_metadata?ref=0.0.2"
-  name   = "read-instance-metadata"
+  name   = "${data.terraform_remote_state.config.run_env}.read-instance-metadata"
 }
 
 
@@ -24,7 +24,7 @@ module "policy_read_instance_metadata" {
 # Purpose: Allow rabbit to use autoscaling groups
 
 resource "aws_iam_policy" "rabbitmq_auto_clustering" {
-  name = "rabbitmq_auto_clustering"
+  name = "${data.terraform_remote_state.config.run_env}.rabbitmq_auto_clustering"
 
   policy = <<EOF
 {
@@ -46,7 +46,7 @@ EOF
 # Purpose: Scan AWS environment
 
 resource "aws_iam_policy" "nexpose_scanning" {
-  name = "nexpose_scanning"
+  name = "${data.terraform_remote_state.config.run_env}.nexpose_scanning"
 
   policy = <<EOF
 {

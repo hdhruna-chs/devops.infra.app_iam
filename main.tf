@@ -28,7 +28,7 @@ data "terraform_remote_state" "config" {
   backend = "s3"
   config {
     bucket = "cv-terraform-backend"
-    key    = "terraform-state/${var.workspace}-config/config/terraform.tfstate"
+    key    = "terraform-state/${var.workspace}/config/terraform.tfstate"
     region = "us-east-1"
   }
 }
