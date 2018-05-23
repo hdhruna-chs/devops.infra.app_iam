@@ -19,6 +19,10 @@ resource "aws_iam_role_policy_attachment" "ec2_logstash_metadata" {
   role       = "${module.ec2_logstash_role.role_name}"
 }
 
+resource "aws_iam_role_policy_attachment" "logstash_consul_autojoin" {
+  policy_arn = "${aws_iam_policy.logstash_consul_autojoin.arn}"
+  role       = "${module.ec2_logstash_role.role_name}"
+}
 
 # Role: rabbitmq
 # Purpose: rabbitmq role for EC2 instances

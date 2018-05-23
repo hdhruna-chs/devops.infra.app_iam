@@ -19,6 +19,26 @@ module "policy_read_instance_metadata" {
   name   = "${data.terraform_remote_state.config.run_env}.read-instance-metadata"
 }
 
+# Policy: logstash_consul_agent_server_joim
+# Purpose: Consul agents run on logstash to auto discover consul servers
+
+resource "aws_iam_policy" "logstash_consul_autojoin" {
+  name = "${data.terraform_remote_state.config.run_env}.logstash_consul_autojoin"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": ["ec2:DescribeInstances"
+                   ],
+        "Resource": ["*"]
+      }
+    ]
+  }
+EOF
+}
 
 # Policy: rabbitmq_auto_clustering
 # Purpose: Allow rabbit to use autoscaling groups
