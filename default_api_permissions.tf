@@ -9,6 +9,6 @@
 # in the same file as it.
 module "ecs_default_api_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
-  name    = "ecs-default-api"
+  name    = "${data.terraform_remote_state.config.run_env}.ecs-default-api"
   service = "ecs-tasks"
 }
