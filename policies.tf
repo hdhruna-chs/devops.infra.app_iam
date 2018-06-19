@@ -16,7 +16,7 @@ module "read_write_elasticsearch_policy" {
 
 module "policy_read_instance_metadata" {
   source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/read_instance_metadata?ref=0.0.2"
-  name   = "${data.terraform_remote_state.config.run_env}.read-instance-metadata"
+  name   = "${data.terraform_remote_state.config.run_env}.app-read-instance-metadata"
 }
 
 # Policy: logstash_consul_agent_server_joim
