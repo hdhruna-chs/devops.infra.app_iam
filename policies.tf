@@ -86,3 +86,11 @@ resource "aws_iam_policy" "nexpose_scanning" {
   }
 EOF
 }
+
+# Policy: ecs-task-access
+# Purpose: Allow ECS containers access to resources
+
+module "policy_ecs_task_access" {
+  source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/ecs_task?ref=0.0.64"
+  name   = "${data.terraform_remote_state.config.run_env}.app-ecs-task-access"
+}
