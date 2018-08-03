@@ -12,3 +12,8 @@ module "ecs_default_api_role" {
   name    = "${data.terraform_remote_state.config.run_env}.ecs-default-api"
   service = "ecs-tasks"
 }
+
+resource "aws_iam_role_policy_attachment" "ecs_task_access" {
+  policy_arn = "${module.policy_ecs_task_access.policy_arn}"
+  role       = "${module.ecs_default_api_role.role_name}"
+}
