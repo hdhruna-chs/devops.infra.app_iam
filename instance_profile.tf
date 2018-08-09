@@ -12,3 +12,8 @@ resource "aws_iam_instance_profile" "nexpose_scanner" {
   name = "${data.terraform_remote_state.config.run_env}.nexpose_scanner"
   role = "${module.nexpose_role.role_name}"
 }
+
+resource "aws_iam_instance_profile" "vault_server" {
+  name = "${data.terraform_remote_state.config.run_env}.vault-server"
+  role = "${module.ec2_vault_role.role_name}"
+}

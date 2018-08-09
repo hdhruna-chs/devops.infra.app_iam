@@ -32,3 +32,12 @@ data "terraform_remote_state" "config" {
     region = "us-east-1"
   }
 }
+
+data "terraform_remote_state" "buckets" {
+  backend = "s3"
+  config {
+    bucket = "cv-terraform-backend"
+    key    = "terraform-state/${var.workspace}/buckets/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
