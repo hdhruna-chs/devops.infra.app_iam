@@ -94,3 +94,13 @@ module "policy_ecs_task_access" {
   source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/ecs_task?ref=0.0.64"
   name   = "${data.terraform_remote_state.config.run_env}.app-ecs-task-access"
 }
+
+
+# Policy: readwrite-vault-s3
+# Purpose: Allow readwrite access to vault S3 bucket
+module "policy_readwrite_vault_s3" {
+  source     = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/read_write_s3_objects?ref=0.0.64"
+  name       = "${data.terraform_remote_state.config.run_env}.vault-readwrite-s3"
+  bucket_id  = "${data.terraform_remote_state.buckets.vault_bucket_id}"
+  object_key = "*"
+}

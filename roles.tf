@@ -53,3 +53,22 @@ resource "aws_iam_role_policy_attachment" "nexpose_scanning" {
   policy_arn = "${aws_iam_policy.nexpose_scanning.arn}"
   role       = "${module.nexpose_role.role_name}"
 }
+
+# Role: ec2-vault
+# Purpose: Role for Vault EC2 instances
+
+module "ec2_vault_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.run_env}.vault"
+  service = "ec2"
+}
+
+resource "aws_iam_role_policy_attachment" "policy_vault_ec2_read_only" {
+  role       = "${module.ec2_vault_role.role_name}"
+  policy_arn = "${module.policy_read_instance_metadata.policy_arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "policy_vault_s3" {
+  role       = "${module.ec2_vault_role.role_name}"
+  policy_arn = "${module.policy_readwrite_vault_s3.policy_arn}"
+}
