@@ -15,7 +15,7 @@ module "read_write_elasticsearch_policy" {
 # Purpose: Allow read access to EC2 metadata
 
 module "policy_read_instance_metadata" {
-  source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/read_instance_metadata?ref=0.0.2"
+  source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/read_instance_metadata?ref=0.0.86"
   name   = "${data.terraform_remote_state.config.run_env}.app-read-instance-metadata"
 }
 
