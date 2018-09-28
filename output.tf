@@ -17,3 +17,7 @@ output "nexpose_instance_profile_id" {
 output "vault_server_instance_profile_id" {
   value = "${aws_iam_instance_profile.vault_server.id}"
 }
+
+output "mule_server_instance_profile_id" {
+  value = "${aws_iam_instance_profile.mule_server.id}"
+}

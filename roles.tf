@@ -72,3 +72,17 @@ resource "aws_iam_role_policy_attachment" "policy_vault_s3" {
   role       = "${module.ec2_vault_role.role_name}"
   policy_arn = "${module.policy_readwrite_vault_s3.policy_arn}"
 }
+
+# Role: ec2-mule
+# Purpose: Role for Mule EC2 instances
+
+module "ec2_mule_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.run_env}.mule"
+  service = "ec2"
+}
+
+resource "aws_iam_role_policy_attachment" "policy_mule_ec2_read_only" {
+  role       = "${module.ec2_mule_role.role_name}"
+  policy_arn = "${module.policy_read_instance_metadata.policy_arn}"
+}
