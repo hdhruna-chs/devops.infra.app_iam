@@ -2,7 +2,7 @@ output "default_api_task_role_arn" {
 	  value = "${module.ecs_default_api_role.arn}"
 }
 
-output "s3_access_api_task_role_arn" {
+output "correspondence_api_task_role_arn" {
 	  value = "${module.ecs_correspondence_api_role.arn}"
 }
 output "logstash_instance_profile_id" {
