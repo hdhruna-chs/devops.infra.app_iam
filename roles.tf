@@ -86,3 +86,18 @@ resource "aws_iam_role_policy_attachment" "policy_mule_ec2_read_only" {
   role       = "${module.ec2_mule_role.role_name}"
   policy_arn = "${module.policy_read_instance_metadata.policy_arn}"
 }
+
+
+# Role: ec2-nomad
+# Purpose: Role for nomad EC2 instances
+
+module "ec2_nomad_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.run_env}.nomad"
+  service = "ec2"
+}
+
+resource "aws_iam_role_policy_attachment" "policy_nomad_ec2_read_only" {
+  role       = "${module.ec2_nomad_role.role_name}"
+  policy_arn = "${module.policy_read_instance_metadata.policy_arn}"
+}
