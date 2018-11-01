@@ -22,3 +22,8 @@ resource "aws_iam_instance_profile" "mule_server" {
   name = "${data.terraform_remote_state.config.run_env}.mule-server"
   role = "${module.ec2_mule_role.role_name}"
 }
+
+resource "aws_iam_instance_profile" "nomad_server" {
+  name = "${data.terraform_remote_state.config.run_env}.nomad-server"
+  role = "${module.ec2_nomad_role.role_name}"
+}

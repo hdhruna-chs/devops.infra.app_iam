@@ -24,3 +24,7 @@ output "vault_server_instance_profile_id" {
 output "mule_server_instance_profile_id" {
   value = "${aws_iam_instance_profile.mule_server.id}"
 }
+
+output "nomad_server_instance_profile_id" {
+  value = "${aws_iam_instance_profile.nomad_server.id}"
+}
