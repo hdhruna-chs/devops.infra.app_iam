@@ -101,3 +101,8 @@ resource "aws_iam_role_policy_attachment" "policy_nomad_ec2_read_only" {
   role       = "${module.ec2_nomad_role.role_name}"
   policy_arn = "${module.policy_read_instance_metadata.policy_arn}"
 }
+
+resource "aws_iam_role_policy_attachment" "policy_nomad_ecr_read_only" {
+  role       = "${module.ec2_nomad_role.role_name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
