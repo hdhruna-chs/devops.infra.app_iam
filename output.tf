@@ -1,7 +1,12 @@
 output "default_api_task_role_arn" {
 	  value = "${module.ecs_default_api_role.arn}"
 }
-
+output "default_lambda_role" {
+	value = "${module.default_lambda_role.arn}"
+}
+output "consul_lambda_role" {
+	value = "${module.consul_lambda_role.arn}"
+}
 output "correspondence_api_task_role_arn" {
 	  value = "${module.ecs_correspondence_api_role.arn}"
 }
