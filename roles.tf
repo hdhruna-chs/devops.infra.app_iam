@@ -106,3 +106,16 @@ resource "aws_iam_role_policy_attachment" "policy_nomad_ecr_read_only" {
   role       = "${module.ec2_nomad_role.role_name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
+# Role: Lambda
+module "default_lambda_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.run_env}.lambda-default"
+  service = "lambda"
+}
+
+module "consul_lambda_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.run_env}.lambda-consul"
+  service = "lambda"
+}
