@@ -87,6 +87,13 @@ resource "aws_iam_role_policy_attachment" "policy_mule_ec2_read_only" {
   policy_arn = "${module.policy_read_instance_metadata.policy_arn}"
 }
 
+resource "aws_iam_role_policy_attachment" "policy_mule_ec2_app_access" {
+  role       = "${module.ec2_mule_role.role_name}"
+  policy_arn = "${module.policy_ec2_app_access.policy_arn}"
+}
+
+
+
 
 # Role: ec2-nomad
 # Purpose: Role for nomad EC2 instances
