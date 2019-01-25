@@ -7,6 +7,10 @@ output "default_lambda_role" {
 output "consul_lambda_role" {
 	value = "${module.consul_lambda_role.arn}"
 }
+
+output "s3_trigger_lambda_role" {
+	value = "${module.s3_trigger_lambda_role.arn}"
+}
 output "correspondence_api_task_role_arn" {
 	  value = "${module.ecs_correspondence_api_role.arn}"
 }
