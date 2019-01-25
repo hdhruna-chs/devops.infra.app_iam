@@ -7,7 +7,8 @@
           "Action": [
             "logs:CreateLogGroup",
             "logs:CreateLogStream",
-            "logs:PutLogEvents"
+            "logs:PutLogEvents",
+            "logs:DeleteLogGroup"
           ],
           "Effect": "Allow",
           "Resource": "arn:aws:logs:*:*:log-group:/aws/lambda/*"
@@ -17,7 +18,7 @@
             "Action": [
                 "s3:PutObject",
                 "s3:GetObject",
-                "s3:ListBucket",
+                "s3:List*",
                 "s3:DeleteObject"
             ],
             "Resource": [
