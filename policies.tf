@@ -215,6 +215,6 @@ data "template_file" "s3_trigger_lambda_policy" {
   vars {
     env = "${data.terraform_remote_state.config.run_env}"
     region = "${data.terraform_remote_state.config.default_region}"
-    bucket_name = "{data.terraform_remote_state.buckets.lambda_s3_bucket_id}"
+    bucket_name = "${data.terraform_remote_state.buckets.lambda_s3_bucket_id}"
   }
 }
