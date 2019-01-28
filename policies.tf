@@ -233,7 +233,7 @@ resource "aws_iam_policy" "s3_trigger_lambda_policy" {
   policy = "${data.template_file.s3_trigger_lambda_policy.rendered}"
 }
 data "template_file" "s3_trigger_lambda_policy" {
-  template = "${file("${path.module}/policies/s3_trigger_lambda.json.tpl")}"
+  template = "${file("${path.module}/policies/claims_input_bucket.json.tpl")}"
   vars {
     env = "${data.terraform_remote_state.config.run_env}"
     region = "${data.terraform_remote_state.config.default_region}"
