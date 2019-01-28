@@ -37,3 +37,7 @@ output "mule_server_instance_profile_id" {
 output "nomad_server_instance_profile_id" {
   value = "${aws_iam_instance_profile.nomad_server.id}"
 }
+
+output "claims_input_bucket_role" {
+  value = "${module.claims_input_bucket_role.arn}"
+}
