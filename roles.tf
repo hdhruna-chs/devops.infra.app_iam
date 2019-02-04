@@ -138,5 +138,3 @@ module "claims_input_bucket_role" {
   name    = "${data.terraform_remote_state.config.run_env}.claims-input-bucket"
   service = "lambda"
 }
-
-

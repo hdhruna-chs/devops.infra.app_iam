@@ -240,3 +240,23 @@ data "template_file" "s3_trigger_lambda_policy" {
     bucket_name = "${data.terraform_remote_state.buckets.claims_input_bucket}"
   }
 }
+
+
+#Nomad
+resource "aws_iam_role_policy_attachment" "nomad_s3_access" {
+  role       = "${module.ec2_nomad_role.role_name}"
+  policy_arn = "${aws_iam_policy.nomad_s3_access_policy.arn}"
+}
+resource "aws_iam_policy" "nomad_s3_access_policy" {
+  name = "${data.terraform_remote_state.config.run_env}.lambda-s3_trigger-policy"
+  policy = "${data.template_file.nomad_s3_access.rendered}"
+}
+
+data "template_file" "nomad_s3_access" {
+  template = "${file("${path.module}/policies/nomad_s3_access.json.tpl")}"
+  vars {
+    env = "${data.terraform_remote_state.config.run_env}"
+    region = "${data.terraform_remote_state.config.default_region}"
+    bucket_name = "${data.terraform_remote_state.buckets.claims_input_bucket}"
+  }
+}
