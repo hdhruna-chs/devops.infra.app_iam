@@ -41,3 +41,6 @@ output "nomad_server_instance_profile_id" {
 output "claims_input_bucket_role" {
   value = "${module.claims_input_bucket_role.arn}"
 }
+output "nginx_nlb_update_role" {
+  value = "${module.nginx_nlb_update_role.arn}"
+}
