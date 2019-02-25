@@ -260,3 +260,26 @@ data "template_file" "nomad_s3_access" {
     bucket_name = "${data.terraform_remote_state.buckets.ice_bucket_id}"
   }
 }
+
+#Nginx Update ALB under NLB
+
+resource "aws_iam_role_policy_attachment" "nginx_nlb_update_vpc" {
+  role   = "${module.nginx_nlb_update_role.role_name}"
+  policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
+}
+resource "aws_iam_role_policy_attachment" "nginx_nlb_update_lambda" {
+  role       = "${module.nginx_nlb_update_role.role_name}"
+  policy_arn = "${aws_iam_policy.nginx_nlb_update_lambda_policy.arn}"
+}
+resource "aws_iam_policy" "nginx_nlb_update_lambda_policy" {
+  name = "${data.terraform_remote_state.config.run_env}.lambda-nginx_nlb_update-policy"
+  policy = "${data.template_file.nginx_nlb_update_lambda_policy.rendered}"
+}
+data "template_file" "nginx_nlb_update_lambda_policy" {
+  template = "${file("${path.module}/policies/nginx_nlb_update.json.tpl")}"
+  vars {
+    env = "${data.terraform_remote_state.config.run_env}"
+    region = "${data.terraform_remote_state.config.default_region}"
+    bucket_name = "${data.terraform_remote_state.buckets.nginx_nlb_proxy_bucket}"
+  }
+}
