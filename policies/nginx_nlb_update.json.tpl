@@ -7,10 +7,11 @@
         "Action": [
           "elasticloadbalancing:Describe*",
           "elasticloadbalancing:RegisterTargets",
+          "elasticloadbalancing:DescribeTargetHealth",
           "elasticloadbalancing:DeregisterTargets"
         ],
         "Effect": "Allow",
-        "Resource": "arn:aws:elasticloadbalancing:us-east-1:*:*"
+        "Resource": "*"
       },
       {
         "Sid": "CW",
