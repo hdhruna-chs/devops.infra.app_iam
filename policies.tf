@@ -153,6 +153,15 @@ module "policy_readwrite_vault_s3" {
   object_key = "*"
 }
 
+# Policy: readwrite-mule-s3
+# Purpose: Allow readwrite access to ice S3 bucket
+module "policy_readwrite_mule_s3" {
+  source     = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/read_write_s3_objects?ref=0.0.64"
+  name       = "${data.terraform_remote_state.config.run_env}.mule-readwrite-s3"
+  bucket_id  = "${data.terraform_remote_state.buckets.ice_bucket_id}"
+  object_key = "*"
+}
+
 #########Default Lambda Role policy. #####################################
 resource "aws_iam_role_policy_attachment" "lambda_default" {
   role       = "${module.default_lambda_role.role_name}"
@@ -261,25 +270,7 @@ data "template_file" "nomad_s3_access" {
   }
 }
 
-#Mule
-resource "aws_iam_role_policy_attachment" "mule_s3_access" {
-  role       = "${module.ec2_nomad_role.role_name}"
-  policy_arn = "${aws_iam_policy.mule_s3_access_policy.arn}"
-}
 
-resource "aws_iam_policy" "mule_s3_access_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.default-mule-s3-access"
-  policy = "${data.template_file.mule_s3_access.rendered}"
-}
-
-data "template_file" "mule_s3_access" {
-  template = "${file("${path.module}/policies/mule_s3_access.json.tpl")}"
-  vars {
-    env = "${data.terraform_remote_state.config.run_env}"
-    region = "${data.terraform_remote_state.config.default_region}"
-    bucket_name = "${data.terraform_remote_state.buckets.ice_bucket_id}"
-  }
-}
 #Nginx Update ALB under NLB
 
 resource "aws_iam_role_policy_attachment" "nginx_nlb_update_vpc" {
