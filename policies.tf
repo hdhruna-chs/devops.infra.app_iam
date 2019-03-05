@@ -293,3 +293,25 @@ data "template_file" "nginx_nlb_update_lambda_policy" {
     bucket_name = "${data.terraform_remote_state.buckets.nginx_nlb_proxy_bucket}"
   }
 }
+
+# Lambda Iam Role to backup ec2 n delete ami
+
+resource "aws_iam_role_policy_attachment" "backup_ec2_delete_ami" {
+  role   = "${module.backup_ec2_n_delete_ami_role.role_name}"
+  policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
+}
+resource "aws_iam_role_policy_attachment" "backup_ec2_delete_ami_lambda" {
+  role       = "${module.backup_ec2_n_delete_ami_role.role_name}"
+  policy_arn = "${aws_iam_policy.backup_ec2_and_delete_ami_policy.arn}"
+}
+resource "aws_iam_policy" "backup_ec2_and_delete_ami_policy" {
+  name = "${data.terraform_remote_state.config.run_env}.lambda-backup_ec2_delete_ami"
+  policy = "${data.template_file.backup_ec2_and_delete_ami_policy.rendered}"
+}
+data "template_file" "backup_ec2_and_delete_ami_policy" {
+  template = "${file("${path.module}/policies/backup_ami_lambda.json.tpl")}"
+  vars {
+    env = "${data.terraform_remote_state.config.run_env}"
+    region = "${data.terraform_remote_state.config.default_region}"
+  }
+}
