@@ -149,3 +149,9 @@ module "nginx_nlb_update_role" {
   name    = "${data.terraform_remote_state.config.run_env}.nginx-nlb-update"
   service = "lambda"
 }
+
+module "backup_ec2_n_delete_ami_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.run_env}.backup-ec2-delete-ami"
+  service = "lambda"
+}

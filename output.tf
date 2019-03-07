@@ -44,3 +44,6 @@ output "claims_input_bucket_role" {
 output "nginx_nlb_update_role" {
   value = "${module.nginx_nlb_update_role.arn}"
 }
+output "backup_ec2_n_delete_ami_role" {
+  value = "${module.backup_ec2_n_delete_ami_role.arn}"
+}
