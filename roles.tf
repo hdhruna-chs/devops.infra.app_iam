@@ -97,6 +97,11 @@ resource "aws_iam_role_policy_attachment" "policy_mule_s3" {
   policy_arn = "${module.policy_readwrite_mule_s3.policy_arn}"
 }
 
+resource "aws_iam_role_policy_attachment" "policy_ice_s3" {
+  role       = "${module.ec2_mule_role.role_name}"
+  policy_arn = "${module.policy_readwrite_ice_s3.policy_arn}"
+}
+
 
 
 
