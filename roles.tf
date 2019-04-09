@@ -168,7 +168,7 @@ module "aws_config_role" {
   service = "config"
 }
 
-resource "aws_iam_role_policy_attachment" "policy_nomad_ec2_read_only" {
+resource "aws_iam_role_policy_attachment" "policy_s3_aws_config" {
   role       = "${module.aws_config_role.role_name}"
-  policy_arn = "${module.policy_awsconfig_s3.policy_arn}"
+  policy_arn = "${aws_iam_policy.policy_awsconfig_s3.arn}"
 }
