@@ -160,3 +160,15 @@ module "backup_ec2_n_delete_ami_role" {
   name    = "${data.terraform_remote_state.config.run_env}.backup-ec2-delete-ami"
   service = "lambda"
 }
+
+#AWSConfig Role
+module "aws_config_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.run_env}.awsconfig"
+  service = "config"
+}
+
+resource "aws_iam_role_policy_attachment" "policy_s3_aws_config" {
+  role       = "${module.aws_config_role.role_name}"
+  policy_arn = "${aws_iam_policy.policy_awsconfig_s3.arn}"
+}

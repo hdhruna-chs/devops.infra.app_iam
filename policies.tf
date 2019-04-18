@@ -324,3 +324,15 @@ data "template_file" "backup_ec2_and_delete_ami_policy" {
     region = "${data.terraform_remote_state.config.default_region}"
   }
 }
+
+#AWS Config
+resource "aws_iam_policy" "policy_awsconfig_s3" {
+  name = "${data.terraform_remote_state.config.run_env}.awsconfig_policy_awsconfig_s3"
+  policy = "${data.template_file.policy_awsconfig_s3.rendered}"
+}
+data "template_file" "policy_awsconfig_s3" {
+  template = "${file("${path.module}/policies/s3_aws_config.json.tpl")}"
+  vars {
+    bucket_name = "${data.terraform_remote_state.buckets.aws_log_config_bucket_id}"
+  }
+}

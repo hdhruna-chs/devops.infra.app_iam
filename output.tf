@@ -7,7 +7,9 @@ output "default_lambda_role" {
 output "consul_lambda_role" {
 	value = "${module.consul_lambda_role.arn}"
 }
-
+output "aws_config_role" {
+	value = "${module.aws_config_role.arn}"
+}
 output "s3_trigger_lambda_role" {
 	value = "${module.s3_trigger_lambda_role.arn}"
 }
