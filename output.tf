@@ -13,6 +13,11 @@ output "aws_config_role" {
 output "s3_trigger_lambda_role" {
 	value = "${module.s3_trigger_lambda_role.arn}"
 }
+
+output "authorizer_lambda_role" {
+	value = "${module.authorizer_lambda_role.arn}"
+}
+
 output "correspondence_api_task_role_arn" {
 	  value = "${module.ecs_correspondence_api_role.arn}"
 }
