@@ -126,6 +126,83 @@ resource "aws_iam_policy" "ecs-correspondence-policy" {
 EOF
 }
 
+# Policy: ECS task specific role
+# Purpose: ECS task role access to cognito and user manmagement tables in DynamoDb
+
+resource "aws_iam_policy" "ecs-user-management-policy" {
+  name = "${data.terraform_remote_state.config.run_env}.ecs-user-management-policy"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+                "ecs:*",
+                "ec2:*",
+                "elasticloadbalancing:DescribeTargetGroups",
+                "elasticloadbalancing:DescribeTargetHealth"
+            ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": ["cognito-sync:*"],
+      "Effect": "Allow",
+      "Resource":["${data.terraform_remote_state.cognito.user_pool_arn}"]
+    },
+    {
+            "Sid": "userTable",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:BatchGet*",
+                "dynamodb:DescribeStream",
+                "dynamodb:DescribeTable",
+                "dynamodb:Get*",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:Delete*",
+                "dynamodb:Update*",
+                "dynamodb:PutItem"
+            ],
+            "Resource": "${data.terraform_remote_state.cognito.users_arn}"
+    },
+    {
+        "Sid": "roleTable",
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:BatchGet*",
+            "dynamodb:DescribeStream",
+            "dynamodb:DescribeTable",
+            "dynamodb:Get*",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:Delete*",
+            "dynamodb:Update*",
+            "dynamodb:PutItem"
+        ],
+        "Resource": "${data.terraform_remote_state.cognito.roles_arn}"
+    },
+    {
+        "Sid": "audienceTable",
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:BatchGet*",
+            "dynamodb:DescribeStream",
+            "dynamodb:DescribeTable",
+            "dynamodb:Get*",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:Delete*",
+            "dynamodb:Update*",
+            "dynamodb:PutItem"
+        ],
+        "Resource": "${data.terraform_remote_state.cognito.audience_config_arn}"
+    }
+]
+}
+EOF
+}
 
 # Policy: ecs-task-access
 # Purpose: Allow ECS containers access to resources
