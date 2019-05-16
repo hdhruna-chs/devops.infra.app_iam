@@ -147,7 +147,7 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
       "Resource": "*"
     },
     {
-      "Action": ["cognito-sync:*"],
+      "Action": ["cognito-idp:*"],
       "Effect": "Allow",
       "Resource":["${data.terraform_remote_state.cognito.user_pool_arn}"]
     },
