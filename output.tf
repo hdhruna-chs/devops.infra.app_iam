@@ -26,6 +26,10 @@ output "correspondence_api_task_role_arn" {
   value = "${module.ecs_correspondence_api_role.arn}"
 }
 
+output "finance_api_task_role_arn" {
+  value = "${module.ecs_finance_api_role.arn}"
+}
+
 output "user_management_api_task_role_arn" {
   value = "${module.ecs_user_management_api_role.arn}"
 }
