@@ -1,15 +1,14 @@
 #Elastic search permissions
 
 module "read_elasticsearch_policy" {
-  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//policies/read_elasticsearch?ref=0.0.2"
-  name    = "${data.terraform_remote_state.config.run_env}.read-elasticsesarch"
+  source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//policies/read_elasticsearch?ref=0.0.2"
+  name   = "${data.terraform_remote_state.config.run_env}.read-elasticsesarch"
 }
 
 module "read_write_elasticsearch_policy" {
-  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//policies/read_write_elasticsearch?ref=0.0.2"
-  name    = "${data.terraform_remote_state.config.run_env}.read-write-elasticsesarch"
+  source = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//policies/read_write_elasticsearch?ref=0.0.2"
+  name   = "${data.terraform_remote_state.config.run_env}.read-write-elasticsesarch"
 }
-
 
 # Policy: read-instance-metadata
 # Purpose: Allow read access to EC2 metadata
@@ -60,7 +59,6 @@ resource "aws_iam_policy" "rabbitmq_auto_clustering" {
   }
 EOF
 }
-
 
 # Policy: nexpose_scanning
 # Purpose: Scan AWS environment
@@ -220,7 +218,6 @@ module "policy_ec2_app_access" {
   name   = "${data.terraform_remote_state.config.run_env}.ec2-app-access"
 }
 
-
 # Policy: readwrite-vault-s3
 # Purpose: Allow readwrite access to vault S3 bucket
 module "policy_readwrite_vault_s3" {
@@ -248,163 +245,195 @@ module "policy_readwrite_mule_s3" {
   object_key = "*"
 }
 
+# Purpose: Allow readwrite access to mule S3 bucket
+module "policy_readwrite_pronto_s3" {
+  source     = "git::https://bitbucket.org/corvesta/devops.infra.modules.git///policies/read_write_s3_objects?ref=0.0.64"
+  name       = "${data.terraform_remote_state.config.run_env}.mule-readwrite-s3-pronto"
+  bucket_id  = "${data.terraform_remote_state.buckets.s3_pronto_provider_bucket_id}"
+  object_key = "*"
+}
+
 #########Default Lambda Role policy. #####################################
 resource "aws_iam_role_policy_attachment" "lambda_default" {
   role       = "${module.default_lambda_role.role_name}"
   policy_arn = "${aws_iam_policy.lambda_default_policy.arn}"
 }
+
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
-  role   = "${module.default_lambda_role.role_name}"
+  role       = "${module.default_lambda_role.role_name}"
   policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
 }
+
 resource "aws_iam_policy" "lambda_default_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.lambda-default-policy"
+  name   = "${data.terraform_remote_state.config.run_env}.lambda-default-policy"
   policy = "${data.template_file.lambda_policy.rendered}"
 }
+
 data "aws_iam_policy" "lambda_vpc_access_policy" {
   arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
+
 data "template_file" "lambda_policy" {
   template = "${file("${path.module}/policies/default_lambda.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
+    env    = "${data.terraform_remote_state.config.run_env}"
     region = "${data.terraform_remote_state.config.default_region}"
   }
 }
 
-
 #Authorizer Lambda Policies
 resource "aws_iam_role_policy_attachment" "authorizer_lambda_vpc_access" {
-  role   = "${module.authorizer_lambda_role.role_name}"
+  role       = "${module.authorizer_lambda_role.role_name}"
   policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
 }
+
 resource "aws_iam_role_policy_attachment" "authorizer_lambda_dynamo_access" {
-  role   = "${module.authorizer_lambda_role.role_name}"
+  role       = "${module.authorizer_lambda_role.role_name}"
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess"
 }
+
 resource "aws_iam_role_policy_attachment" "authorizer_lambda" {
   role       = "${module.authorizer_lambda_role.role_name}"
   policy_arn = "${aws_iam_policy.authorizer_lambda_policy.arn}"
 }
+
 resource "aws_iam_policy" "authorizer_lambda_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.lambda-authorizer-policy"
+  name   = "${data.terraform_remote_state.config.run_env}.lambda-authorizer-policy"
   policy = "${data.template_file.authorizer_lambda_policy.rendered}"
 }
+
 data "template_file" "authorizer_lambda_policy" {
   template = "${file("${path.module}/policies/authorizer_lambda.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
-    region = "${data.terraform_remote_state.config.default_region}"
+    env     = "${data.terraform_remote_state.config.run_env}"
+    region  = "${data.terraform_remote_state.config.default_region}"
     account = "${data.terraform_remote_state.vpc.account_id}"
   }
 }
 
-
 #Consul Lambda Policies
 resource "aws_iam_role_policy_attachment" "consul_lambda_vpc_access" {
-  role   = "${module.consul_lambda_role.role_name}"
+  role       = "${module.consul_lambda_role.role_name}"
   policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
 }
+
 resource "aws_iam_role_policy_attachment" "consul_lambda" {
   role       = "${module.consul_lambda_role.role_name}"
   policy_arn = "${aws_iam_policy.consul_lambda_policy.arn}"
 }
+
 resource "aws_iam_policy" "consul_lambda_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.lambda-consul-policy"
+  name   = "${data.terraform_remote_state.config.run_env}.lambda-consul-policy"
   policy = "${data.template_file.consul_lambda_policy.rendered}"
 }
+
 data "template_file" "consul_lambda_policy" {
   template = "${file("${path.module}/policies/consul_lambda.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
+    env    = "${data.terraform_remote_state.config.run_env}"
     region = "${data.terraform_remote_state.config.default_region}"
   }
 }
 
 #Trigger Lambda with s3 Policy
 resource "aws_iam_role_policy_attachment" "s3_trigger_lambda_vpc_access" {
-  role   = "${module.s3_trigger_lambda_role.role_name}"
+  role       = "${module.s3_trigger_lambda_role.role_name}"
   policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
 }
+
 resource "aws_iam_role_policy_attachment" "s3_trigger_lambda" {
   role       = "${module.s3_trigger_lambda_role.role_name}"
   policy_arn = "${aws_iam_policy.s3_trigger_lambda_policy.arn}"
 }
+
 resource "aws_iam_policy" "s3_trigger_lambda_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.lambda-s3_trigger-policy"
+  name   = "${data.terraform_remote_state.config.run_env}.lambda-s3_trigger-policy"
   policy = "${data.template_file.s3_trigger_lambda_policy.rendered}"
 }
+
 data "template_file" "s3_trigger_lambda_policy" {
   template = "${file("${path.module}/policies/s3_trigger_lambda.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
-    region = "${data.terraform_remote_state.config.default_region}"
+    env         = "${data.terraform_remote_state.config.run_env}"
+    region      = "${data.terraform_remote_state.config.default_region}"
     bucket_name = "${data.terraform_remote_state.buckets.lambda_s3_bucket_id}"
   }
 }
 
 #Trigger Lambda with s3 for ice claims bucket
 resource "aws_iam_role_policy_attachment" "ice_trigger_lambda_vpc_access" {
-  role   = "${module.claims_input_bucket_role.role_name}"
+  role       = "${module.claims_input_bucket_role.role_name}"
   policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
 }
+
 resource "aws_iam_role_policy_attachment" "ice_trigger_lambda" {
   role       = "${module.claims_input_bucket_role.role_name}"
   policy_arn = "${aws_iam_policy.ice_trigger_lambda_policy.arn}"
 }
+
 resource "aws_iam_policy" "ice_trigger_lambda_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.lambda-ice-trigger-policy"
+  name   = "${data.terraform_remote_state.config.run_env}.lambda-ice-trigger-policy"
   policy = "${data.template_file.ice_trigger_lambda_policy.rendered}"
 }
+
 data "template_file" "ice_trigger_lambda_policy" {
   template = "${file("${path.module}/policies/claims_input_bucket.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
-    region = "${data.terraform_remote_state.config.default_region}"
+    env         = "${data.terraform_remote_state.config.run_env}"
+    region      = "${data.terraform_remote_state.config.default_region}"
     bucket_name = "${data.terraform_remote_state.buckets.ice_bucket_id}"
   }
 }
-
 
 #Nomad
 resource "aws_iam_role_policy_attachment" "nomad_s3_access" {
   role       = "${module.ec2_nomad_role.role_name}"
   policy_arn = "${aws_iam_policy.nomad_s3_access_policy.arn}"
 }
+
 resource "aws_iam_policy" "nomad_s3_access_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.default-nomad-s3-access"
+  name   = "${data.terraform_remote_state.config.run_env}.default-nomad-s3-access"
   policy = "${data.template_file.nomad_s3_access.rendered}"
 }
 
 data "template_file" "nomad_s3_access" {
   template = "${file("${path.module}/policies/nomad_s3_access.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
-    region = "${data.terraform_remote_state.config.default_region}"
+    env         = "${data.terraform_remote_state.config.run_env}"
+    region      = "${data.terraform_remote_state.config.default_region}"
     bucket_name = "${data.terraform_remote_state.buckets.ice_bucket_id}"
   }
 }
 
-
 #Nginx Update ALB under NLB
 
 resource "aws_iam_role_policy_attachment" "nginx_nlb_update_vpc" {
-  role   = "${module.nginx_nlb_update_role.role_name}"
+  role       = "${module.nginx_nlb_update_role.role_name}"
   policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
 }
+
 resource "aws_iam_role_policy_attachment" "nginx_nlb_update_lambda" {
   role       = "${module.nginx_nlb_update_role.role_name}"
   policy_arn = "${aws_iam_policy.nginx_nlb_update_lambda_policy.arn}"
 }
+
 resource "aws_iam_policy" "nginx_nlb_update_lambda_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.lambda-nginx_nlb_update-policy"
+  name   = "${data.terraform_remote_state.config.run_env}.lambda-nginx_nlb_update-policy"
   policy = "${data.template_file.nginx_nlb_update_lambda_policy.rendered}"
 }
+
 data "template_file" "nginx_nlb_update_lambda_policy" {
   template = "${file("${path.module}/policies/nginx_nlb_update.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
-    region = "${data.terraform_remote_state.config.default_region}"
+    env         = "${data.terraform_remote_state.config.run_env}"
+    region      = "${data.terraform_remote_state.config.default_region}"
     bucket_name = "${data.terraform_remote_state.buckets.nginx_nlb_proxy_bucket}"
   }
 }
@@ -412,32 +441,38 @@ data "template_file" "nginx_nlb_update_lambda_policy" {
 # Lambda Iam Role to backup ec2 n delete ami
 
 resource "aws_iam_role_policy_attachment" "backup_ec2_delete_ami" {
-  role   = "${module.backup_ec2_n_delete_ami_role.role_name}"
+  role       = "${module.backup_ec2_n_delete_ami_role.role_name}"
   policy_arn = "${data.aws_iam_policy.lambda_vpc_access_policy.arn}"
 }
+
 resource "aws_iam_role_policy_attachment" "backup_ec2_delete_ami_lambda" {
   role       = "${module.backup_ec2_n_delete_ami_role.role_name}"
   policy_arn = "${aws_iam_policy.backup_ec2_and_delete_ami_policy.arn}"
 }
+
 resource "aws_iam_policy" "backup_ec2_and_delete_ami_policy" {
-  name = "${data.terraform_remote_state.config.run_env}.lambda-backup_ec2_delete_ami"
+  name   = "${data.terraform_remote_state.config.run_env}.lambda-backup_ec2_delete_ami"
   policy = "${data.template_file.backup_ec2_and_delete_ami_policy.rendered}"
 }
+
 data "template_file" "backup_ec2_and_delete_ami_policy" {
   template = "${file("${path.module}/policies/backup_ami_lambda.json.tpl")}"
+
   vars {
-    env = "${data.terraform_remote_state.config.run_env}"
+    env    = "${data.terraform_remote_state.config.run_env}"
     region = "${data.terraform_remote_state.config.default_region}"
   }
 }
 
 #AWS Config
 resource "aws_iam_policy" "policy_awsconfig_s3" {
-  name = "${data.terraform_remote_state.config.run_env}.awsconfig_policy_awsconfig_s3"
+  name   = "${data.terraform_remote_state.config.run_env}.awsconfig_policy_awsconfig_s3"
   policy = "${data.template_file.policy_awsconfig_s3.rendered}"
 }
+
 data "template_file" "policy_awsconfig_s3" {
   template = "${file("${path.module}/policies/s3_aws_config.json.tpl")}"
+
   vars {
     bucket_name = "${data.terraform_remote_state.buckets.aws_log_config_bucket_id}"
   }
