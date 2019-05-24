@@ -127,6 +127,45 @@ EOF
 }
 
 # Policy: ECS task specific role
+# Purpose: ECS task role access to s3
+
+resource "aws_iam_policy" "ecs-finance-policy" {
+  name = "${data.terraform_remote_state.config.run_env}.ecs-finance-policy"
+
+  policy = <<EOF
+{
+
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetRole",
+                "ec2:DescribeInstances",
+                "iam:GetInstanceProfile",
+                "iam:GetUser"
+            ],
+            "Resource": ["*"]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::cv-${data.terraform_remote_state.config.run_env}-finance/*",
+                "arn:aws:s3:::cv-${data.terraform_remote_state.config.run_env}-finance"
+            ]
+        }
+    ]
+  }
+EOF
+}
+
+# Policy: ECS task specific role
 # Purpose: ECS task role access to cognito and user manmagement tables in DynamoDb
 
 resource "aws_iam_policy" "ecs-user-management-policy" {
