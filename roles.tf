@@ -38,8 +38,6 @@ resource "aws_iam_role_policy_attachment" "rabbitmq_auto_clustering" {
   role       = "${module.rabbitmq_role.role_name}"
 }
 
-
-
 # Role: nexpose_scanner
 # Purpose: nexpose scanner role for EC2 instances
 
@@ -102,8 +100,10 @@ resource "aws_iam_role_policy_attachment" "policy_ice_s3" {
   policy_arn = "${module.policy_readwrite_ice_s3.policy_arn}"
 }
 
-
-
+resource "aws_iam_role_policy_attachment" "policy_pronto_s3" {
+  role       = "${module.ec2_mule_role.role_name}"
+  policy_arn = "${module.policy_readwrite_pronto_s3.policy_arn}"
+}
 
 # Role: ec2-nomad
 # Purpose: Role for nomad EC2 instances
