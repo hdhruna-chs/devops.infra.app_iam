@@ -235,6 +235,22 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
             "dynamodb:PutItem"
         ],
         "Resource": "${data.terraform_remote_state.cognito.audience_config_arn}"
+    },
+    {
+        "Sid": "permissionTable",
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:BatchGet*",
+            "dynamodb:DescribeStream",
+            "dynamodb:DescribeTable",
+            "dynamodb:Get*",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:Delete*",
+            "dynamodb:Update*",
+            "dynamodb:PutItem"
+        ],
+        "Resource": "${data.terraform_remote_state.cognito.permissions_arn}"
     }
 ]
 }
