@@ -451,9 +451,19 @@ resource "aws_iam_role_policy_attachment" "nomad_s3_access" {
   policy_arn = "${aws_iam_policy.nomad_s3_access_policy.arn}"
 }
 
+resource "aws_iam_role_policy_attachment" "nomad_s3_access_config" {
+  role       = "${module.ec2_nomad_role.role_name}"
+  policy_arn = "${aws_iam_policy.nomad_s3_access_config_policy.arn}"
+}
+
 resource "aws_iam_policy" "nomad_s3_access_policy" {
   name   = "${data.terraform_remote_state.config.run_env}.default-nomad-s3-access"
   policy = "${data.template_file.nomad_s3_access.rendered}"
+}
+
+resource "aws_iam_policy" "nomad_s3_access_config_policy" {
+  name   = "${data.terraform_remote_state.config.run_env}.config-nomad-s3-access"
+  policy = "${data.template_file.nomad_s3_access_config.rendered}"
 }
 
 data "template_file" "nomad_s3_access" {
@@ -463,6 +473,16 @@ data "template_file" "nomad_s3_access" {
     env         = "${data.terraform_remote_state.config.run_env}"
     region      = "${data.terraform_remote_state.config.default_region}"
     bucket_name = "${data.terraform_remote_state.buckets.ice_bucket_id}"
+  }
+}
+
+data "template_file" "nomad_s3_access_config" {
+  template = "${file("${path.module}/policies/nomad_s3_access.json.tpl")}"
+
+  vars {
+    env         = "${data.terraform_remote_state.config.run_env}"
+    region      = "${data.terraform_remote_state.config.default_region}"
+    bucket_name = "${data.terraform_remote_state.buckets.nomad_config}"
   }
 }
 
