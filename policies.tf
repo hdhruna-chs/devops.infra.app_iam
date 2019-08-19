@@ -482,7 +482,7 @@ data "template_file" "nomad_s3_access_config" {
   vars {
     env         = "${data.terraform_remote_state.config.run_env}"
     region      = "${data.terraform_remote_state.config.default_region}"
-    bucket_name = "${data.terraform_remote_state.buckets.nomad_config}"
+    bucket_name = "${data.terraform_remote_state.buckets.claims_input_bucket}"
   }
 }
 
