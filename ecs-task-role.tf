@@ -42,14 +42,14 @@ resource "aws_iam_role_policy_attachment" "ecs_task_cognito_dynamo_access" {
   role       = module.ecs_user_management_api_role.role_name
 }
 
-#CLIAMS
-module "ecs_cliams_api_role" {
+#claimS
+module "ecs_claims_api_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
   name    = "${data.terraform_remote_state.config.outputs.run_env}.ecs-claims-api"
   service = "ecs-tasks"
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_task_cliams" {
+resource "aws_iam_role_policy_attachment" "ecs_task_claims" {
   policy_arn = aws_iam_policy.nomad_s3_pronto_access_policy.arn
-  role       = module.ecs_cliams_api_role.role_name
+  role       = module.ecs_claims_api_role.role_name
 }
