@@ -462,6 +462,11 @@ role       = module.ec2_nomad_role.role_name
 policy_arn = aws_iam_policy.nomad_s3_access_config_policy.arn
 }
 
+resource "aws_iam_role_policy_attachment" "nomad_s3_access_config" {
+role       = module.ec2_nomad_role.role_name
+policy_arn = aws_iam_policy.nomad_s3_pronto_access.arn
+}
+
 resource "aws_iam_policy" "nomad_s3_access_policy" {
 name   = "${data.terraform_remote_state.config.outputs.run_env}.default-nomad-s3-access"
 policy = data.template_file.nomad_s3_access.rendered
@@ -470,6 +475,11 @@ policy = data.template_file.nomad_s3_access.rendered
 resource "aws_iam_policy" "nomad_s3_access_config_policy" {
 name   = "${data.terraform_remote_state.config.outputs.run_env}.config-nomad-s3-access"
 policy = data.template_file.nomad_s3_access_config.rendered
+}
+
+resource "aws_iam_policy" "nomad_s3_pronto_access_policy" {
+name   = "${data.terraform_remote_state.config.outputs.run_env}.nomad_s3_pronto_access"
+policy = data.template_file.nomad_s3_pronto_access.rendered
 }
 
 data "template_file" "nomad_s3_access" {
@@ -490,6 +500,16 @@ env         = data.terraform_remote_state.config.outputs.run_env
 region      = data.terraform_remote_state.config.outputs.default_region
 bucket_name = data.terraform_remote_state.buckets.outputs.claims_input_bucket
 }
+}
+
+data "template_file" "nomad_s3_pronto_access" {
+template = file("${path.module}/policies/nomad_s3_access.json.tpl")
+
+vars = {
+  env         = data.terraform_remote_state.config.outputs.run_env
+  region      = data.terraform_remote_state.config.outputs.default_region
+  bucket_name = data.terraform_remote_state.buckets.outputs.s3_pronto_provider_bucket_id
+  }
 }
 
 #Nginx Update ALB under NLB
@@ -558,4 +578,3 @@ vars = {
 bucket_name = data.terraform_remote_state.buckets.outputs.aws_log_config_bucket_id
 }
 }
-
