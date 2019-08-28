@@ -462,7 +462,7 @@ role       = module.ec2_nomad_role.role_name
 policy_arn = aws_iam_policy.nomad_s3_access_config_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "nomad_s3_access_config" {
+resource "aws_iam_role_policy_attachment" "nomad_s3_pronto_access" {
 role       = module.ec2_nomad_role.role_name
 policy_arn = aws_iam_policy.nomad_s3_pronto_access.arn
 }
