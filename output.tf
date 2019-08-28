@@ -74,3 +74,6 @@ output "s3presigned_task_role_arn" {
   value = module.ecs_s3presign_api_role.arn
 }
 
+output "ecs_user_management_api_role" {
+  value = module.ecs_user_management_api_role.arn
+}
