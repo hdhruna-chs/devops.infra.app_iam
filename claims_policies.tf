@@ -20,7 +20,7 @@ template = file("${path.module}/policies/s3_trigger_lambda.json.tpl")
 vars = {
   env         = data.terraform_remote_state.config.outputs.run_env
   region      = data.terraform_remote_state.config.outputs.default_region
-  bucket_name = data.terraform_remote_state.buckets.outputs.claims_bucket_id
+  bucket_name = data.terraform_remote_state.buckets.outputs.claims_bucket
   }
 }
 
@@ -36,11 +36,31 @@ resource "aws_iam_policy" "claims_policy" {
 }
 
 data "template_file" "claims_policy" {
-template = file("${path.module}/policies/s3_trigger_lambda.json.tpl")
+template = file("${path.module}/policies/read_write_s3_bucket.json.tpl")
 
 vars = {
   env         = data.terraform_remote_state.config.outputs.run_env
   region      = data.terraform_remote_state.config.outputs.default_region
-  bucket_name = data.terraform_remote_state.buckets.outputs.claims_bucket_id
+  bucket_name = data.terraform_remote_state.buckets.outputs.claims_bucket
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "pronto" {
+  role       = module.ecs_claims_api_role.role_name
+  policy_arn = aws_iam_policy.pronto_policy.arn
+}
+
+resource "aws_iam_policy" "pronto_policy" {
+  name   = "${data.terraform_remote_state.config.outputs.run_env}.pronto-policy"
+  policy = data.template_file.pronto_policy.rendered
+}
+
+data "template_file" "pronto_policy" {
+template = file("${path.module}/policies/read_write_s3_bucket.json.tpl")
+
+vars = {
+  env         = data.terraform_remote_state.config.outputs.run_env
+  region      = data.terraform_remote_state.config.outputs.default_region
+  bucket_name = data.terraform_remote_state.buckets.outputs.s3_pronto_provider_bucket_id
   }
 }
