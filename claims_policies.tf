@@ -24,6 +24,26 @@ vars = {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "pronto_trigger_lambda" {
+  role       = module.claims_bucket_role.role_name
+  policy_arn = aws_iam_policy.pronto_trigger_lambda_policy.arn
+}
+
+resource "aws_iam_policy" "pronto_trigger_lambda_policy" {
+  name   = "${data.terraform_remote_state.config.outputs.run_env}.lambda-pronto-trigger-policy"
+  policy = data.template_file.pronto_trigger_lambda_policy.rendered
+}
+
+data "template_file" "pronto_trigger_lambda_policy" {
+template = file("${path.module}/policies/s3_trigger_lambda.json.tpl")
+
+vars = {
+  env         = data.terraform_remote_state.config.outputs.run_env
+  region      = data.terraform_remote_state.config.outputs.default_region
+  bucket_name = data.terraform_remote_state.buckets.outputs.s3_pronto_provider_bucket_id
+  }
+}
+
 #Claims APP policy and attachemnt
 resource "aws_iam_role_policy_attachment" "claims" {
   role       = module.ecs_claims_api_role.role_name
