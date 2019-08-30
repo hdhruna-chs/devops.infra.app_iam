@@ -62,6 +62,10 @@ output "ice_bucket_role" {
   value = module.ice_bucket_role.arn
 }
 
+output "claims_bucket_role" {
+  value = module.claims_bucket_role.arn
+}
+
 output "nginx_nlb_update_role" {
   value = module.nginx_nlb_update_role.arn
 }
