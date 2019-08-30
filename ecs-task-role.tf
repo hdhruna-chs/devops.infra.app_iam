@@ -48,8 +48,3 @@ module "ecs_claims_api_role" {
   name    = "${data.terraform_remote_state.config.outputs.run_env}.ecs-claims-api"
   service = "ecs-tasks"
 }
-
-resource "aws_iam_role_policy_attachment" "ecs_task_claims" {
-  policy_arn = aws_iam_policy.nomad_s3_pronto_access_policy.arn
-  role       = module.ecs_claims_api_role.role_name
-}

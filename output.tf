@@ -58,8 +58,8 @@ output "nomad_server_instance_profile_id" {
   value = aws_iam_instance_profile.nomad_server.id
 }
 
-output "claims_input_bucket_role" {
-  value = module.claims_input_bucket_role.arn
+output "ice_bucket_role" {
+  value = module.ice_bucket_role.arn
 }
 
 output "nginx_nlb_update_role" {
