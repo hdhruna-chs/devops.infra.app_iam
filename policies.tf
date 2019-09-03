@@ -207,7 +207,7 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
                 "dynamodb:Update*",
                 "dynamodb:PutItem"
             ],
-            "Resource": "${data.terraform_remote_state.cognito.outputs.users_arn}"
+            "Resource": "${data.terraform_remote_state.cognito.outputs.users_arn}-*"
     },
     {
         "Sid": "roleTable",
@@ -223,7 +223,7 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
             "dynamodb:Update*",
             "dynamodb:PutItem"
         ],
-        "Resource": "${data.terraform_remote_state.cognito.outputs.roles_arn}"
+        "Resource": "${data.terraform_remote_state.cognito.outputs.roles_arn}-*"
     },
     {
         "Sid": "audienceTable",
@@ -239,7 +239,7 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
             "dynamodb:Update*",
             "dynamodb:PutItem"
         ],
-        "Resource": "${data.terraform_remote_state.cognito.outputs.audience_config_arn}"
+        "Resource": "${data.terraform_remote_state.cognito.outputs.audience_config_arn}-*"
     },
     {
         "Sid": "permissionTable",
