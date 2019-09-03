@@ -46,6 +46,10 @@ output "nexpose_instance_profile_id" {
   value = aws_iam_instance_profile.nexpose_scanner.id
 }
 
+output "alfresco_instance_profile_id" {
+  value = aws_iam_instance_profile.alfresco.id
+}
+
 output "vault_server_instance_profile_id" {
   value = aws_iam_instance_profile.vault_server.id
 }

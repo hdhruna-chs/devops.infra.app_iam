@@ -124,6 +124,19 @@ resource "aws_iam_role_policy_attachment" "policy_nomad_ecr_read_only" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+# Role: alfresco
+
+module "alfresco_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.alfresco"
+  service = "ec2"
+}
+
+resource "aws_iam_role_policy_attachment" "alfresco_policy" {
+  role       = module.alfresco_role.role_name
+  policy_arn = aws_iam_policy.alfresco_policy.arn
+}
+
 # Role: Lambda
 module "default_lambda_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
