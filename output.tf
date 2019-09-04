@@ -81,3 +81,19 @@ output "ecs_user_management_api_role" {
 output "ecs_claims_api_role" {
   value = module.ecs_claims_api_role.arn
 }
+
+output "airflow_role" {
+  value = module.airflow_role
+}
+
+output "external_dns_role" {
+  value = module.external_dns_role
+}
+
+output "server_node" {
+  value = aws_iam_role_policy.server_node.name
+}
+
+output "kiam_server_role" {
+  value = aws_iam_role.server_role
+}

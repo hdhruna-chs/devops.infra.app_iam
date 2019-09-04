@@ -578,3 +578,55 @@ vars = {
 bucket_name = data.terraform_remote_state.buckets.outputs.aws_log_config_bucket_id
 }
 }
+
+
+# Kubernetes Policies
+resource "aws_iam_policy" "airflow" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.airflow"
+  policy = data.template_file.airflow.rendered
+}
+
+data "template_file" "airflow" {
+  template = file(
+    "./policies/airflow_policy.json.tpl",
+  )
+  vars = {
+    env = data.terraform_remote_state.config.outputs.run_env
+    region = data.terraform_remote_state.config.outputs.default_region
+  }
+}
+
+resource "aws_iam_policy" "external-dns" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.external-dns"
+  policy = data.template_file.external-dns.rendered
+}
+
+data "template_file" "external-dns" {
+  template = file(
+    "./policies/external-dns-policy.json.tpl",
+  )
+  vars = {
+    env = data.terraform_remote_state.config.outputs.run_env
+    region = data.terraform_remote_state.config.outputs.default_region
+  }
+}
+
+resource "aws_iam_policy" "server_policy" {
+  name        = "${data.terraform_remote_state.config.outputs.run_env}.kiam_server_policy"
+  description = "Policy for the Kiam Server process"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sts:AssumeRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
