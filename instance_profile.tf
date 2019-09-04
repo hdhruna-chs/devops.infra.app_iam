@@ -28,3 +28,8 @@ resource "aws_iam_instance_profile" "nomad_server" {
   role = module.ec2_nomad_role.role_name
 }
 
+resource "aws_iam_instance_profile" "alfresco" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.alfresco-server"
+  role = module.alfresco_role.role_name
+}
+
