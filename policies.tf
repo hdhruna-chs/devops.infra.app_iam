@@ -399,6 +399,19 @@ region = data.terraform_remote_state.config.outputs.default_region
 }
 }
 
+# Alfresco
+resource "aws_iam_policy" "alfresco_policy" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.alfresco-policy"
+  policy = data.template_file.alfresco_policy.rendered
+}
+
+data "template_file" "alfresco_policy" {
+  template = file("${path.module}/policies/alfresco.json.tpl")
+  vars = {
+    bucket_name = "cv-${data.terraform_remote_state.config.outputs.run_env}-alfresco-data"
+  }
+}
+
 #Trigger Lambda with s3 Policy
 resource "aws_iam_role_policy_attachment" "s3_trigger_lambda_vpc_access" {
 role       = module.s3_trigger_lambda_role.role_name
@@ -490,4 +503,56 @@ template = file("${path.module}/policies/s3_aws_config.json.tpl")
 vars = {
 bucket_name = data.terraform_remote_state.buckets.outputs.aws_log_config_bucket_id
 }
+}
+
+
+# Kubernetes Policies
+resource "aws_iam_policy" "airflow" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.airflow"
+  policy = data.template_file.airflow.rendered
+}
+
+data "template_file" "airflow" {
+  template = file(
+    "./policies/airflow_policy.json.tpl",
+  )
+  vars = {
+    env = data.terraform_remote_state.config.outputs.run_env
+    region = data.terraform_remote_state.config.outputs.default_region
+  }
+}
+
+resource "aws_iam_policy" "external-dns" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.external-dns"
+  policy = data.template_file.external-dns.rendered
+}
+
+data "template_file" "external-dns" {
+  template = file(
+    "./policies/external-dns-policy.json.tpl",
+  )
+  vars = {
+    env = data.terraform_remote_state.config.outputs.run_env
+    region = data.terraform_remote_state.config.outputs.default_region
+  }
+}
+
+resource "aws_iam_policy" "server_policy" {
+  name        = "${data.terraform_remote_state.config.outputs.run_env}.kiam_server_policy"
+  description = "Policy for the Kiam Server process"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sts:AssumeRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
 }

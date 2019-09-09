@@ -124,6 +124,19 @@ resource "aws_iam_role_policy_attachment" "policy_nomad_ecr_read_only" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+# Role: alfresco
+
+module "alfresco_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.alfresco"
+  service = "ec2"
+}
+
+resource "aws_iam_role_policy_attachment" "alfresco_policy" {
+  role       = module.alfresco_role.role_name
+  policy_arn = aws_iam_policy.alfresco_policy.arn
+}
+
 # Role: Lambda
 module "default_lambda_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
@@ -183,4 +196,129 @@ module "aws_config_role" {
 resource "aws_iam_role_policy_attachment" "policy_s3_aws_config" {
   role       = module.aws_config_role.role_name
   policy_arn = aws_iam_policy.policy_awsconfig_s3.arn
+}
+
+# Kubernetes roles
+module "airflow_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_user_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.airflow"
+  service = "ec2"
+  user = aws_iam_role.server_role.arn
+}
+
+resource "aws_iam_role_policy_attachment" "airflow-dns" {
+  role       = module.airflow_role.role_name
+  policy_arn = aws_iam_policy.airflow.arn
+}
+
+module "external_dns_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_user_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.external-dns"
+  service = "ec2"
+  user = aws_iam_role.server_role.arn
+}
+
+resource "aws_iam_role_policy_attachment" "external-dns" {
+  role       = module.external_dns_role.role_name
+  policy_arn = aws_iam_policy.external-dns.arn
+}
+
+resource "aws_iam_role" "server_node" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.server_node"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": { "Service": "ec2.amazonaws.com"},
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "workers_AmazonEKSWorkerNodePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.server_node.name
+}
+
+resource "aws_iam_role_policy_attachment" "workers_AmazonEKS_CNI_Policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.server_node.name
+}
+
+resource "aws_iam_role_policy_attachment" "workers_AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.server_node.name
+}
+
+
+
+resource "aws_iam_instance_profile" "server_node" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.server_node"
+  role = "${aws_iam_role.server_node.name}"
+}
+
+resource "aws_iam_role" "server_role" {
+  name        = "${data.terraform_remote_state.config.outputs.run_env}.kiam-server"
+  description = "Role the Kiam Server process assumes"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_iam_role.server_node.arn}"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "server_node" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.server_node"
+  role = "${aws_iam_role.server_node.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sts:AssumeRole"
+      ],
+      "Resource": "${aws_iam_role.server_role.arn}"
+    },
+    {
+    "Effect": "Allow",
+    "Action": [
+      "autoscaling:DescribeAutoScalingGroups",
+      "autoscaling:DescribeAutoScalingInstances",
+      "autoscaling:DescribeLaunchConfigurations",
+      "autoscaling:DescribeTags",
+      "ec2:DescribeLaunchTemplateVersions",
+      "autoscaling:SetDesiredCapacity",
+      "autoscaling:TerminateInstanceInAutoScalingGroup",
+        "autoscaling:UpdateAutoScalingGroup"
+    ],
+    "Resource": ["*"]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy_attachment" "server_policy_attach" {
+  name       = "${data.terraform_remote_state.config.outputs.run_env}.kiam-server-attachment"
+  roles      = ["${aws_iam_role.server_role.name}"]
+  policy_arn = "${aws_iam_policy.server_policy.arn}"
 }
