@@ -156,6 +156,12 @@ module "s3_trigger_lambda_role" {
   service = "lambda"
 }
 
+module "s3_trigger_lambda_claims_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.lambda-trigger-claims-s3"
+  service = "lambda"
+}
+
 module "authorizer_lambda_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
   name    = "${data.terraform_remote_state.config.outputs.run_env}.lambda-authorizer"

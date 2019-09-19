@@ -556,3 +556,32 @@ resource "aws_iam_policy" "server_policy" {
 }
 EOF
 }
+
+
+
+
+#Input trigger claims policy
+resource "aws_iam_role_policy_attachment" "s3_trigger_lambda_vpc_access" {
+role       = module.s3_trigger_lambda_claims_role.role_name
+policy_arn = data.aws_iam_policy.lambda_vpc_access_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "s3_trigger_lambda" {
+role       = module.s3_trigger_lambda_claims_role.role_name
+policy_arn = aws_iam_policy.s3_trigger_lambda_claims_policy.arn
+}
+
+resource "aws_iam_policy" "s3_trigger_lambda_claims_policy" {
+name   = "${data.terraform_remote_state.config.outputs.run_env}.lambda-s3_trigger-policy"
+policy = data.template_file.s3_trigger_lambda_claims_policy.rendered
+}
+
+data "template_file" "s3_trigger_lambda_claims_policy" {
+template = file("${path.module}/policies/s3_trigger_lambda_claims.json.tpl")
+
+vars = {
+  env         = data.terraform_remote_state.config.outputs.run_env
+  region      = data.terraform_remote_state.config.outputs.default_region
+
+  }
+}
