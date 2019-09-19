@@ -561,7 +561,7 @@ EOF
 
 
 #Input trigger claims policy
-resource "aws_iam_role_policy_attachment" "s3_trigger_lambda_vpc_access" {
+resource "aws_iam_role_policy_attachment" "s3_trigger_lambda_claims_vpc_access" {
 role       = module.s3_trigger_lambda_claims_role.role_name
 policy_arn = data.aws_iam_policy.lambda_vpc_access_policy.arn
 }
