@@ -21,12 +21,7 @@
                 "s3:List*",
                 "s3:DeleteObject"
             ],
-            "Resource": [
-                "arn:aws:s3:::cv-${env}-lambda/*",
-                "arn:aws:s3:::cv-${env}-lambda",
-                "arn:aws:s3:::${bucket_name}/*",
-                "arn:aws:s3:::${bucket_name}"
-            ]
+            "Resource": "*"
         }
     ]
   }
