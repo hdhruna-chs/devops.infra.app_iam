@@ -572,7 +572,7 @@ policy_arn = aws_iam_policy.s3_trigger_lambda_claims_policy.arn
 }
 
 resource "aws_iam_policy" "s3_trigger_lambda_claims_policy" {
-name   = "${data.terraform_remote_state.config.outputs.run_env}.lambda-s3_trigger-policy"
+name   = "${data.terraform_remote_state.config.outputs.run_env}.lambda-s3_trigger-claims-policy"
 policy = data.template_file.s3_trigger_lambda_claims_policy.rendered
 }
 
