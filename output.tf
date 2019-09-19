@@ -18,6 +18,11 @@ output "s3_trigger_lambda_role" {
   value = module.s3_trigger_lambda_role.arn
 }
 
+output "s3_trigger_lambda_cliams_role" {
+  value = module.s3_trigger_lambda_cliams_role.arn
+}
+
+
 output "authorizer_lambda_role" {
   value = module.authorizer_lambda_role.arn
 }
