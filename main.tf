@@ -59,3 +59,12 @@ data "terraform_remote_state" "cognito" {
   }
 }
 
+data "terraform_remote_state" "api_gateway_perms" {
+  backend = "s3"
+  config = {
+    bucket = "cv-terraform-backend"
+    key    = "terraform-state/${var.workspace}/api_gateway_perms/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+

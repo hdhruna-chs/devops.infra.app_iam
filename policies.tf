@@ -267,7 +267,7 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
             "dynamodb:Update*",
             "dynamodb:PutItem"
         ],
-        "Resource": "${data.terraform_remote_state.cognito.outputs.permissions_arn}"
+        "Resource": "${data.terraform_remote_state.api_gateway_perms.outputs.permissions_arn}"
     }
 ]
 }
