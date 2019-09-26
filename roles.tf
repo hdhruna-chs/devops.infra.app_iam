@@ -52,6 +52,21 @@ resource "aws_iam_role_policy_attachment" "nexpose_scanning" {
   role       = module.nexpose_role.role_name
 }
 
+# Role: alienvault
+# Purpose: nexpose scanner role for EC2 instances
+
+module "alienvault_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.alienvault"
+  service = "ec2"
+}
+
+resource "aws_iam_role_policy_attachment" "alienvault_ec2_perms" {
+  policy_arn = aws_iam_policy.nexpose_scanning.arn
+  role       = module.alienvault_role.role_name
+}
+
+
 # Role: ec2-vault
 # Purpose: Role for Vault EC2 instances
 

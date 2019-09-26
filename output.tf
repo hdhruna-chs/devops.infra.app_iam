@@ -47,6 +47,10 @@ output "rabbitmq_instance_profile_id" {
   value = aws_iam_instance_profile.rabbitmq.id
 }
 
+output "alienvault_instance_profile_id" {
+  value = aws_iam_instance_profile.alienvault_instace.id
+}
+
 output "nexpose_instance_profile_id" {
   value = aws_iam_instance_profile.nexpose_scanner.id
 }

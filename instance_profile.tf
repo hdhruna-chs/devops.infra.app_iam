@@ -33,3 +33,7 @@ resource "aws_iam_instance_profile" "alfresco" {
   role = module.alfresco_role.role_name
 }
 
+resource "aws_iam_instance_profile" "alienvault_instace" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.alienvault_instace"
+  role = module.alienvault_role.role_name
+}
