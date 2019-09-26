@@ -62,6 +62,18 @@ EOF
 
 }
 
+# Policy: alienvault_ec2_perms
+# Purpose: Scan AWS environment
+
+resource "aws_iam_policy" "alienvault_ec2_perms" {
+name = "${data.terraform_remote_state.config.outputs.run_env}.alienvault_ec2_perms"
+policy = data.template_file.alienvault_ec2_perms.rendered
+}
+
+data "template_file" "alienvault_ec2_perms" {
+template = file("${path.module}/policies/alienvault_ec2_perms.json.tpl")
+}
+
 # Policy: nexpose_scanning
 # Purpose: Scan AWS environment
 
@@ -255,7 +267,7 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
             "dynamodb:Update*",
             "dynamodb:PutItem"
         ],
-        "Resource": "${data.terraform_remote_state.cognito.outputs.permissions_arn}"
+        "Resource": "${data.terraform_remote_state.api_gateway_perms.outputs.permissions_arn}"
     }
 ]
 }
