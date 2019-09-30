@@ -62,7 +62,7 @@ module "alienvault_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "alienvault_ec2_perms" {
-  policy_arn = aws_iam_policy.nexpose_scanning.arn
+  policy_arn = aws_iam_policy.alienvault_ec2_perms.arn
   role       = module.alienvault_role.role_name
 }
 
