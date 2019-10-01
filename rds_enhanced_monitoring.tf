@@ -1,5 +1,5 @@
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  name  = "${var.run_env}-${var.name}-rds-enhanced-monitoring-role"
+  name  = "rds-enhanced-monitoring-role"
 
   # Trust policy...
   assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring.json
