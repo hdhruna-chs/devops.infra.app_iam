@@ -99,7 +99,7 @@ output "ecs_claims_api_role" {
   value = module.ecs_claims_api_role.arn
 }
 
-output "ecs_dms_api_role" {
+output "ecs_dms_api_role_arn" {
   value = module.ecs_dms_api_role.arn
 }
 
