@@ -570,8 +570,6 @@ EOF
 }
 
 
-
-
 #Input trigger claims policy
 resource "aws_iam_role_policy_attachment" "s3_trigger_lambda_claims_vpc_access" {
 role       = module.s3_trigger_lambda_claims_role.role_name
@@ -596,4 +594,31 @@ vars = {
   region      = data.terraform_remote_state.config.outputs.default_region
 
   }
+}
+
+resource "aws_iam_policy" "ecs-dms-policy" {
+name = "${data.terraform_remote_state.config.outputs.run_env}.ecs-dms-policy"
+
+policy = <<EOF
+{
+
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::cv-${data.terraform_remote_state.config.outputs.run_env}-dms-*/*",
+                "arn:aws:s3:::cv-${data.terraform_remote_state.config.outputs.run_env}-dms-*"
+            ]
+        }
+    ]
+  }
+EOF
+
 }
