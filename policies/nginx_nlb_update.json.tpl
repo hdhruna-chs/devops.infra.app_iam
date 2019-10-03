@@ -44,7 +44,9 @@
                 "arn:aws:s3:::cv-${env}-lambda/*",
                 "arn:aws:s3:::cv-${env}-lambda",
                 "arn:aws:s3:::cv-${env}-nginx-nlb-proxy/*",
-                "arn:aws:s3:::cv-${env}-nginx-nlb-proxy"
+                "arn:aws:s3:::cv-${env}-nginx-nlb-proxy",
+                "arn:aws:s3:::cv-${env}-portals-nginx-nlb-proxy/*",
+                "arn:aws:s3:::cv-${env}-portals-nginx-nlb-proxy"
             ]
       }
     ]
