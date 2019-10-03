@@ -114,3 +114,7 @@ output "server_node" {
 output "kiam_server_role" {
   value = aws_iam_role.server_role
 }
+
+output "rds_enhanced monitoring" {
+  value = aws_iam_role.rds_enhanced_monitoring.arn
+}
