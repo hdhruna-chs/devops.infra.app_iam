@@ -274,7 +274,6 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
 EOF
 
 }
-
 # Policy: ecs-task-access
 # Purpose: Allow ECS containers access to resources
 
@@ -610,7 +609,8 @@ policy = <<EOF
                 "s3:PutObject",
                 "s3:GetObject",
                 "s3:ListBucket",
-                "s3:DeleteObject"
+                "s3:DeleteObject",
+                "s3:GetObjectVersion"
             ],
             "Resource": [
                 "arn:aws:s3:::cv-${data.terraform_remote_state.config.outputs.run_env}-dms-*/*",
