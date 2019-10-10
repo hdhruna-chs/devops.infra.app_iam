@@ -610,7 +610,8 @@ policy = <<EOF
                 "s3:GetObject",
                 "s3:ListBucket",
                 "s3:DeleteObject",
-                "s3:GetObjectVersion"
+                "s3:GetObjectVersion",
+                "s3:ListBucketVersions"
             ],
             "Resource": [
                 "arn:aws:s3:::cv-${data.terraform_remote_state.config.outputs.run_env}-dms-*/*",
