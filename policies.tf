@@ -633,6 +633,21 @@ resource "aws_iam_policy" "git2consul-policy" {
 data "template_file" "git2consul" {
   template = file(
     "./policies/git2consul_policy.json.tpl",
+    )
+  vars = {
+    env = data.terraform_remote_state.config.outputs.run_env
+    region = data.terraform_remote_state.config.outputs.default_region
+  }
+}
+
+resource "aws_iam_policy" "eks_scaling" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.eks_scaling"
+  policy = data.template_file.eks_scaling.rendered
+}
+
+data "template_file" "eks_scaling" {
+  template = file(
+    "./policies/eks_scaling_policy.json.tpl",
   )
   vars = {
     env = data.terraform_remote_state.config.outputs.run_env

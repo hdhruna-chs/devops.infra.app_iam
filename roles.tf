@@ -343,3 +343,16 @@ resource "aws_iam_policy_attachment" "server_policy_attach" {
   roles      = ["${aws_iam_role.server_role.name}"]
   policy_arn = "${aws_iam_policy.server_policy.arn}"
 }
+
+
+module "eks_scaling_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_user_role?ref=0.0.2"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.eks_scaling"
+  service = "ec2"
+  user =  aws_iam_role.server_role.arn
+}
+
+resource "aws_iam_role_policy_attachment" "eks_scaling" {
+  role       = module.eks_scaling_role.role_name
+  policy_arn = aws_iam_policy.eks_scaling.arn
+}
