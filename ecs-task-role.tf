@@ -59,3 +59,16 @@ resource "aws_iam_role_policy_attachment" "ecs_task_dms_s3_access" {
   policy_arn = aws_iam_policy.ecs-dms-policy.arn
   role       = module.ecs_dms_api_role.role_name
 }
+
+
+module "git2consul_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.git2consul"
+  service = "ecs-tasks"
+}
+
+resource "aws_iam_role_policy_attachment" "git2consul" {
+  policy_arn = aws_iam_policy.git2consul-policy.arn
+  role       = module.git2consul_role.role_name
+}
+

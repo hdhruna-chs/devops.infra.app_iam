@@ -623,3 +623,19 @@ policy = <<EOF
 EOF
 
 }
+
+
+resource "aws_iam_policy" "git2consul-policy" {
+  name = "${data.terraform_remote_state.config.outputs.run_env}.git2consul"
+  policy = data.template_file.git2consul.rendered
+}
+
+data "template_file" "git2consul" {
+  template = file(
+    "./policies/git2consul_policy.json.tpl",
+  )
+  vars = {
+    env = data.terraform_remote_state.config.outputs.run_env
+    region = data.terraform_remote_state.config.outputs.default_region
+  }
+}
