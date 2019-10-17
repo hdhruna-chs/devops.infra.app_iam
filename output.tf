@@ -122,3 +122,10 @@ output "kiam_server_role" {
 output "rds_enhanced_monitoring" {
   value = aws_iam_role.rds_enhanced_monitoring.arn
 }
+output "git2consul_role" {
+  value = module.git2consul_role.arn
+}
+
+output "eks_scaling_role" {
+  value = module.eks_scaling_role
+}
