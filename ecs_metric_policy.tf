@@ -1,4 +1,4 @@
-#Ice role Policy
+#ECS Metric role Policy
 resource "aws_iam_role_policy_attachment" "ecs_metric_lambda_vpc_access" {
   role       = module.ecs_metric_lambda_role.role_name
   policy_arn = data.aws_iam_policy.lambda_vpc_access_policy.arn
