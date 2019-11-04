@@ -20,14 +20,6 @@
             "Resource": "*"
         },
         {
-        "Sid": "Stmt1572889115514",
-        "Action": [
-            "ecs:Describe*"
-        ],
-            "Effect": "Allow",
-            "Resource": "*"
-        },
-        {
         "Sid": "Stmt1572890032797",
         "Action": [
             "autoscaling:Describe*"
