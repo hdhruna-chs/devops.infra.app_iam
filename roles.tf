@@ -207,6 +207,12 @@ module "backup_ec2_n_delete_ami_role" {
   service = "lambda"
 }
 
+module "ecs_metric_lambda_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.ecs-metric"
+  service = "lambda"
+}
+
 #AWSConfig Role
 module "aws_config_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
