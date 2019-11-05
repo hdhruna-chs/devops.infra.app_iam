@@ -27,6 +27,10 @@ output "authorizer_lambda_role" {
   value = module.authorizer_lambda_role.arn
 }
 
+output "ecs_metric_lambda_role" {
+  value = module.ecs_metric_lambda_role.arn
+}
+
 output "correspondence_api_task_role_arn" {
   value = module.ecs_correspondence_api_role.arn
 }
