@@ -10,6 +10,10 @@ output "consul_lambda_role" {
   value = module.consul_lambda_role.arn
 }
 
+output "cognito_environment_role" {
+  value = module.cognitoEnvironmentConfig-lambda_role.arn
+}
+
 output "aws_config_role" {
   value = module.aws_config_role.arn
 }
