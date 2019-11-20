@@ -410,6 +410,32 @@ region = data.terraform_remote_state.config.outputs.default_region
 }
 }
 
+# Cognito environment config lambda
+resource "aws_iam_role_policy_attachment" "cognitoEnvironmentConfig_lambda" {
+  role = module.cognitoEnvironmentConfig-lambda_role.role_name
+  policy_arn = data.aws_iam_policy.lambda_vpc_access_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "cognitoEnvironmentConfig_lambda_attachement" {
+role       = module.cognitoEnvironmentConfig-lambda_role.role_name
+policy_arn = aws_iam_policy.cognitoEnvironmentConfig_lambda_policy.arn
+}
+
+resource "aws_iam_policy" "cognitoEnvironmentConfig_lambda_policy" {
+name   = "${data.terraform_remote_state.config.outputs.run_env}.lambda-configenvironment-policy"
+policy = data.template_file.cognitoEnvironmentConfig_policy.rendered
+}
+
+data "template_file" "cognitoEnvironmentConfig_policy" {
+template = file("${path.module}/policies/cognito_environment.json.tpl")
+
+vars = {
+env    = data.terraform_remote_state.config.outputs.run_env
+region = data.terraform_remote_state.config.outputs.default_region
+account = data.terraform_remote_state.vpc.outputs.account_id
+}
+}
+
 # Alfresco
 resource "aws_iam_policy" "alfresco_policy" {
   name = "${data.terraform_remote_state.config.outputs.run_env}.alfresco-policy"

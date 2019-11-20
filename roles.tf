@@ -165,6 +165,12 @@ module "consul_lambda_role" {
   service = "lambda"
 }
 
+module "cognitoEnvironmentConfig-lambda_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.cognitoEnvironmentConfig"
+  service = "lambda"
+}
+
 module "s3_trigger_lambda_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
   name    = "${data.terraform_remote_state.config.outputs.run_env}.lambda-trigger-s3"
