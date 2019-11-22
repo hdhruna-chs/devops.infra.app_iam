@@ -50,12 +50,11 @@ data "terraform_remote_state" "vpc" {
 }
 
 data "terraform_remote_state" "cognito" {
-  backend = "remote"
+  backend = "s3"
   config = {
-    organization = "corvesta"
-    workspaces = {
-      name = "devops-infra-cognito-${var.workspace}"
-    }
+    bucket = "cv-terraform-backend"
+    key    = "terraform-state/${var.workspace}/cognito/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 

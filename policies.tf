@@ -203,7 +203,7 @@ resource "aws_iam_policy" "ecs-user-management-policy" {
     {
       "Action": ["cognito-idp:*"],
       "Effect": "Allow",
-      "Resource":["${data.terraform_remote_state.cognito.outputs.user_pool_arn}"]
+      "Resource":["*"]
     },
     {
             "Sid": "userTable",
