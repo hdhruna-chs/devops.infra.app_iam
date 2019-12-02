@@ -137,3 +137,7 @@ output "git2consul_role" {
 output "eks_scaling_role" {
   value = module.eks_scaling_role
 }
+
+output "signing_proxy_role" {
+  value = module.signing_proxy_role.arn
+}

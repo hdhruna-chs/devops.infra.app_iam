@@ -72,3 +72,9 @@ resource "aws_iam_role_policy_attachment" "git2consul" {
   role       = module.git2consul_role.role_name
 }
 
+module "signing_proxy_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.signing_proxy"
+  service = "ecs-tasks"
+}
+
