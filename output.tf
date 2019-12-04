@@ -141,3 +141,7 @@ output "eks_scaling_role" {
 output "signing_proxy_role" {
   value = module.signing_proxy_role.arn
 }
+
+output "s3_metadata_indexer" {
+  value = module.s3_indexer_role.arn
+}

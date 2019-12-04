@@ -219,6 +219,12 @@ module "ecs_metric_lambda_role" {
   service = "lambda"
 }
 
+module "s3_indexer_role" {
+  source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
+  name    = "${data.terraform_remote_state.config.outputs.run_env}.s3-indexer"
+  service = "lambda"
+}
+
 #AWSConfig Role
 module "aws_config_role" {
   source  = "git::https://bitbucket.org/corvesta/devops.infra.modules.git//common/iam/service_role?ref=1.0.1"
