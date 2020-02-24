@@ -1,69 +1,45 @@
-# Providers
-
 provider "aws" {
   region  = data.terraform_remote_state.config.outputs.default_region
-  profile = data.terraform_remote_state.config.outputs.run_env
+  profile = local.workspace
 }
-
-# Backend
 
 terraform {
-  required_version = ">=0.11.0"
-
   backend "s3" {
-    bucket = "cv-terraform-backend"
-    key    = "app_iam/terraform.tfstate"
     region = "us-east-1"
+    bucket = "cchs-terraform-backend"
+    key    = "terraform.tfstate"
 
-    dynamodb_table       = "cv-terraform-state"
-    workspace_key_prefix = "terraform-state"
+    dynamodb_table       = "terraform-state"
+    workspace_key_prefix = "terraform-state/app_iam"
   }
 }
-
-### Terraform linked projects ###
 
 data "terraform_remote_state" "config" {
   backend = "s3"
-  config = {
-    bucket = "cv-terraform-backend"
-    key    = "terraform-state/${var.workspace}/config/terraform.tfstate"
-    region = "us-east-1"
-  }
-}
 
-data "terraform_remote_state" "buckets" {
-  backend = "s3"
   config = {
-    bucket = "cv-terraform-backend"
-    key    = "terraform-state/${var.workspace}/buckets/terraform.tfstate"
+    bucket = "cchs-terraform-backend"
+    key    = "terraform-state/config/${local.workspace}/terraform.tfstate"   
     region = "us-east-1"
   }
 }
 
 data "terraform_remote_state" "vpc" {
   backend = "s3"
+
   config = {
-    bucket = "cv-terraform-backend"
-    key    = "terraform-state/${var.workspace}/vpc/terraform.tfstate"
+    bucket = "cchs-terraform-backend"
+    key    = "terraform-state/vpc/${local.workspace}/terraform.tfstate"   
     region = "us-east-1"
   }
 }
 
-data "terraform_remote_state" "cognito" {
+data "terraform_remote_state" "database" {
   backend = "s3"
+
   config = {
-    bucket = "cv-terraform-backend"
-    key    = "terraform-state/${var.workspace}/cognito/terraform.tfstate"
+    bucket = "cchs-terraform-backend"
+    key    = "terraform-state/rds-postgresql/${local.workspace}/terraform.tfstate"   
     region = "us-east-1"
   }
 }
-
-data "terraform_remote_state" "api_gateway_perms" {
-  backend = "s3"
-  config = {
-    bucket = "cv-terraform-backend"
-    key    = "terraform-state/${var.workspace}/api_gateway_perms/terraform.tfstate"
-    region = "us-east-1"
-  }
-}
-
