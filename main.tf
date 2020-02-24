@@ -43,3 +43,7 @@ data "terraform_remote_state" "database" {
     region = "us-east-1"
   }
 }
+
+locals {
+  workspace = terraform.workspace
+}

@@ -4,11 +4,6 @@ role       = module.authorizer_lambda_role.role_name
 policy_arn = data.aws_iam_policy.lambda_vpc_access_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "authorizer_lambda_dynamo_access" {
-role       = module.authorizer_lambda_role.role_name
-policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess"
-}
-
 resource "aws_iam_role_policy_attachment" "authorizer_lambda" {
 role       = module.authorizer_lambda_role.role_name
 policy_arn = aws_iam_policy.authorizer_lambda_policy.arn
@@ -31,3 +26,4 @@ template = file("${path.module}/policies/authorizer_lambda.json.tpl")
 
 data "aws_iam_policy" "lambda_vpc_access_policy" {
 arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
